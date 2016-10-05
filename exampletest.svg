@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+    <svg xmlns="http://www.w3.org/2000/svg" width="279.5mm" height="216.2mm"  >
+    <g id="main">
+
+<defs>  
+<style type="text/css">    
+    <![CDATA[
+    circle.rightanswer { 
+        stroke:rgb(80,80,180);                
+        stroke-width:0.1mm;                
+        fill:black;                   
+    }                   
+    circle.blank {                                                                                                                            
+        stroke:rgb(80,80,180);                                                                                                                
+        stroke-width:0.1mm;                                                                                                                   
+        fill:none;                                                                                                                            
+    }       
+    text.sizenineend {                
+        font-family:Arial;                 
+        font-size:9px;
+        text-anchor:end;          
+        fill:rgb(80,80,180);   
+    }
+    text.sizetenend {
+        font-family:Arial;                 
+        font-size:10px;
+        text-anchor:end;          
+        fill:rgb(80,80,180);   
+    }
+    text.sizeninemiddle {                
+        font-family:Arial;                 
+        font-size:9px;
+        text-anchor:middle;          
+        fill:rgb(80,80,180);
+    }
+    line.strut {
+        stroke:black;
+        stroke-width:1.5mm
+    }
+    line.fatstrut {
+        stroke:black;
+        stroke-width:3mm
+    }
+    text.regular {
+        font-size:10px;
+        font-family:Arial;
+        text-anchor:start;
+        fill:black;
+    }
+    ]]>         
+</style>       
+</defs>   
+
+<circle class="rightanswer" cy="34mm" cx="148.9mm" r="1.6mm" />
+<circle class="rightanswer" cy="42.5mm" cx="148.9mm" r="1.6mm" />
+<circle class="rightanswer" cy="51.0mm" cx="140.3mm" r="1.6mm" />
+<circle class="rightanswer" cy="59.5mm" cx="136.0mm" r="1.6mm" />
+<circle class="rightanswer" cy="68.0mm" cx="144.6mm" r="1.6mm" />
+<circle class="rightanswer" cy="76.5mm" cx="144.6mm" r="1.6mm" />
+<circle class="rightanswer" cy="85.0mm" cx="153.2mm" r="1.6mm" />
+<!-- question counter is 50  -->
+<!-- question counter is 100  -->
+<text x="15mm" y="8mm" class="regular">Sheet created by jesse, 2015-10-21</text>
+    </g>
+</svg>

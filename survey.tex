@@ -1,0 +1,95 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\input{testpreamble.tex}
+
+\begin{document}
+
+%%%%%%%%%%%% IS THIS THE KEY, OR THE TEST THAT YOU INTEND TO PRINT?? %%%%%%%%%%%%%
+\keyfalse
+% Uncommenting \keytrue would set the "key" variable to TRUE:
+\keytrue
+\thispagestyle{empty}
+
+
+% Set the question counter to zero, for starters:
+\setcounter{saveenum}{0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                         %%%
+%%% Now on to the questions %%%
+%%%                         %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\surveytitle}{\textbf{Faculty In Residence Questionnaire (Rawlins)}}
+
+% for an overly simple demonstration, let's make a command for the questions:
+\newcommand{\questions}{
+% First question:
+
+%\stepcounter{saveenum} \stepcounter{answer}
+%\begin{tabular}{b{\columnonewidth} l p{0.1\textwidth} l p{0.2\textwidth} l p{0.1\textwidth} l p{0.25\textwidth}  }
+%\mft \multicolumn{8}{l}{Your gender:}\\[\sep]
+%& $\Box$ & Male & $\Box$ & Female & $\Box$ & Other & $\Box$ & Prefer not to disclose.\\[\sep]
+%\eqq
+
+\likertq{4}{8}{I interacted with the Faculty In Residence (Bethany and Jesse) this year:}
+\loption{Never} \loption{Maybe once} \loption{Some} \loption{Often}
+\\[\sep]
+\eqq
+
+\likertq{4}{8}{Having faculty living here benefited me personally:}
+\loption{Never} \loption{Nothing substantial} \loption{Some} \loption{A lot}
+\\[\sep]
+\eqq
+
+\likertq{4}{8}{My experience with the Faculty In Residence made it easier to talk to my professors:}
+\loption{No} \loption{Maybe a little} \loption{Some} \loption{A lot}
+\\[\sep]
+\eqq
+
+
+\question{If you did \emph{not} interact with the Faculty in Residence this year, why not?}
+\checkbox{Schedule conflicts with any events.}
+\checkbox{Never saw them / didn't know they lived here.}
+\checkbox{Didn't see any use or benefit to me.}
+\checkbox{Other (specify): \makeblank{5in} }
+\eqq
+
+\question{What would improve the FIR program for next year?}
+\eqq
+}
+
+% OK make the survey:
+
+\surveytitle
+\bigskip
+
+\questions
+
+\vspace{0.7in}
+\makeblank{7in}
+\vspace{0.35in}
+\setcounter{saveenum}{0}
+
+\surveytitle
+\bigskip
+
+\questions
+
+
+
+%\begin{tabular}{b{\columnonewidth} l p{0.1\textwidth} l p{0.15\textwidth} l p{0.1\textwidth} l p{0.1\textwidth} l p{0.1\textwidth}  }
+%\mfta{b} \multicolumn{10}{l}{If you \emph{did} interact with the Faculty in Residence this year, what stands out in your memory,} \\
+%& \multicolumn{10}{l}{good or bad? (you can pick more than one), and answer as many ``others" as you want.}\\[\sep]
+%& $\Box$ & Dessert.
+%& $\Box$ & Study tables. 
+%& $\Box$ & Debates.
+%& $\Box$ & Dogs/kids.
+%& $\Box$ & Door tags.\\\\
+%& $\Box$ & \multicolumn{9}{l}{Other (specify): \makeblank{5in}}\\[\sep]
+%\eqq
+
+
+
+\end{document}

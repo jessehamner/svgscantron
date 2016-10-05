@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+\input{testpreamble.tex} % all the special macros for a multiple choice test
+
+\begin{document}
+
+%%%%%%%%%%%% IS THIS THE KEY, OR THE TEST THAT YOU INTEND TO PRINT?? %%%%%%%%%%%%%
+\keyfalse
+% Uncommenting \keytrue would set the "key" variable to TRUE:
+\keytrue
+
+% here's the output file that contains the correct answers, to be read
+% later by the python script:
+\opentempfile{answerlist.txt}
+
+% Marker for test version "A" or "B"
+% \testversionmarker{A}
+
+% More generic upper left label:
+\upperleftcomment{(This label could say ``Test Version A'' or ``Good luck, suckers!'', for example)}
+
+% print the header:
+\testheader{Example}{Your Class}{Fall \the\year}{0.75in}
+
+% Print the boilerplate instructions:
+\printinstructions
+
+% page break:
+\newpage
+
+% There aren't sections in this test -- just some number of questions worth 2 points each:
+\bigskip\noindent\textbf{~~~~Pick the best answer for each question:} \emph{2 points each.}\bigskip
+
+
+% Set the question counter to zero, for starters:
+\setcounter{saveenum}{0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                         %%%
+%%% Now on to the questions %%%
+%%%                         %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% the \input statement here isn't necessary of course, but it's convenient:
+% that way, the document is easier to read, and you can create 'banks' of
+% questions without having to deal with many copies of the source LaTeX.
+\input{samplequestions.tex}
+
+
+\vfill
+
+\begin{center}
+\emph{Go on to the next page.}
+\end{center}
+
+\ifoddleaveblank
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\closetempfile{answerlist.txt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Extra Credit:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% add a title, and tell the student the questions are worth 1 point each:
+\sectiontitle{Extra Credit}{1}{} 
+
+% add a line for the pupil's name:
+\addnameline
+
+% reset the counter:
+\setcounter{saveenum}{0}
+
+% extra credit questions work almost the same as regular multiple choice questions,
+% but the answer requires a \printifkey{} statement instead of \rightans{}
+\question{Why does Python make life easier?}
+\eqq
+
+\printifkey{0.5in}{Because the code is more readable than Perl, even though Perl is easier to write.}
+
+
+\question{Why does R make life easier?}
+\eqq
+
+\printifkey{0.5in}{Acceptable answers include: impressive graphics, 
+ability to use it in a cluster environment, \LaTeX{} output tables, 
+and forcing users to learn more about the numerical methods they are using.}
+
+\vfill
+
+\begin{center}
+\emph{This is the last page.}
+\end{center}
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% End of Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

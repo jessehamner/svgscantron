@@ -1,0 +1,55 @@
+# Scantron (official) form no. 4521
+# Landscape orientation
+
+pagewidth=279.5
+pageheight=216.2
+
+# What answer glyphs are we using?
+alph=["A","B","C","D","E"]
+
+circdist=4.3
+
+yincrement=8.5
+
+# Radius of the black circles going to be, in mm:
+radius=1.6
+
+# "left margin" of the first set of answers, in mm:
+x1=136.0
+
+y1=0
+
+toplefty=[34,124.5]
+
+rgbcolor="80,80,180"
+
+# Approximate RGB color of the ink (or, the majority of the ink) on the page:
+hexcolor="#5050b4"
+
+# How many mm to increment between columns, in the x dimension:
+columnxincrement=29.75
+
+# Some sheets have columns that are offset in the vertical dimension, like
+# Scantron Form No. 106173
+columnyoffset=[0,0,0,0,0]
+
+markx=131.5
+
+spacex=4.35
+
+interspace = 3.6
+
+# column count:
+colcount=5
+
+# row count:
+rowcount=10
+
+# How many of the little black bars at the bottom are there per column of bubbles?
+columnstrutcount=6
+
+# start point of the information label along the upper left margin, in mm:
+upperlefttextlabelx=15
+upperlefttextlabely=8
+totalweebly	justchecking
+# Scantron OLD type 4521, uses sans-serif font for label text and dark blue background

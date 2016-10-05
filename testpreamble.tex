@@ -1,0 +1,415 @@
+\usepackage[left=0.15in,right=0.5in,top=0.5in,bottom=0.75in]{geometry} % never use the anysize package!
+\usepackage{graphicx}		% de facto new standard for graphics
+\usepackage{xcolor}
+\usepackage{multicol,multirow}
+\usepackage{array}	
+\usepackage{comment}
+%\usepackage{sgame}
+\usepackage{tikz}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage{marvosym}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{amsmath,amssymb}
+\usepackage{rotate}
+\usepackage{setspace}
+\usepackage{xintexpr}
+%\usepackage{tabularx} % cannot use tabularx; may consider booktabs.
+
+%\setlength{\parindent}{0in}	% easier than putting \noindent at every paragraph
+
+% basic shortcuts:
+\newcommand{\+}{\item}			% easier than typing \item a lot
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\bd}{\begin{description}}
+\newcommand{\ed}{\end{description}}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\rr}{\raggedright}
+
+% some hyperlink and table formatting shortcuts:
+\renewcommand{\thefootnote}{\fnsymbol{footnote}} 	
+\definecolor{webblue}{rgb}{0,0,0.75}
+\definecolor{rightgreen}{rgb}{0,0.65,0}
+\definecolor{footlineblue}{rgb}{0.392,0.706,0.941}
+\newcommand{\sep}{1mm}
+\newcommand{\negsep}{-4mm}
+
+% formdefs is the specific formatting information required for the 
+% Scantron form you wish to use. 
+\newcommand{\formdefs}{old4521.txt}
+
+
+%%% Stuff to load up before getting going with the rest of the test:
+
+% counter for the questions:
+\newcounter{saveenum}
+% And also create a counter for the within-question answers. 
+% IMPORTANT NOTE:
+% the "answer" counter resets to zero when you increment the "saveenum" counter.
+\newcounter{answer}[saveenum] 
+
+\newif\ifkey
+\keyfalse
+
+
+% tabular formatting and shortcuts for the questions.
+% Typically you won't care about any of these except the \question macro,
+% Which is the idea: it makes it clean and easy to format each question. 
+
+% How wide will the text fields be for questions and answers?
+\newcommand{\howwide}{6.7in}
+\newcommand{\columnonewidth}{0.13in}
+\newcommand{\columntwowidth}{0.17in}
+\newcommand{\graphicquestionwidth}{4.0in}
+\newcommand{\graphiccolumnwidth}{3.0in}
+
+% create the tabular environment for this question:
+\newcommand{\qtab}{\begin{tabular}{b{\columnonewidth} b{\columntwowidth} p{\howwide}}}
+
+% print the question number, in bold, and increment to the next tabular column.
+\newcommand{\mft}{\textbf{\arabic{saveenum}}. & }
+
+% if you need to have "question 4a", use this macro instead:
+\newcommand{\mfta}[1]{\textbf{\arabic{saveenum}#1}. & }
+
+% span two columns with the string input by the user (this is the question block)
+\newcommand{\mcp}[1]{\multicolumn{2}{p{\howwide}}{#1}  \\[\sep]}
+
+% Tie all these smaller macros together into a simple 
+% \question{Question text goes here},
+% though note you still have to close out the tabular environment 
+% with \eqq or \eqqnoskip, below.
+% The \question macro also increments the question counter, and 
+
+\newcommand{\question}[1]{ \stepcounter{saveenum} \stepcounter{answer} \qtab\mft\mcp{#1}}
+
+% Usually you want some vertical space between questions. 
+% The \eqq macro closes out the tabular environment and adds a bigskip.
+% The \eqnoskip macro closes out the tabular environment with no extra space.
+\newcommand{\eqq}{\end{tabular} \bigskip }
+\newcommand{\eqnoskip}{\end{tabular} }
+
+% this macro neatly formats each multiple choice answer and increments the 
+% within-question answer counter:
+\newcommand{\ans}[1]{ & (\alph{answer}) & #1 \stepcounter{answer} \\ } 
+	% both \addtocounter{answer}{1} and \stepcounter{answer} add a line feed 
+	% UNLESS you put the stepcounter statement before the end of the tabular line break!
+
+% this macro lets you flag the correct answer in the LaTeX source, but only
+% have it show up when you specifically change the "key" variable from false to true:
+\newcommand{\rightans}[1]{ 
+\ifkey
+	\immediate\write\tempfile{\arabic{answer}}
+	
+	& ({\color{rightgreen}\textbf{\alph{answer}}}) & \textbf{#1} \stepcounter{answer} \\ 
+
+\else
+	& (\alph{answer}) & #1 \stepcounter{answer} \\ 
+% both \addtocounter{answer}{1} and \stepcounter{answer} add a line feed 
+% UNLESS you put the stepcounter statement before the end of the tabular line break!
+\fi
+}
+
+% if you just want a checkbox (say, for a Likert-scale or yes/no question):
+% NOTE: this ends the line after each question.
+\newcommand{\checkbox}[1]{& $\Box$ & #1 \\[\sep]}
+
+% Some customization for, say, extra credit questions:
+\newcommand{\fullwidth}[1] {\multicolumn{3}{p{\howwide}}{#1 \\ }  }
+\newcommand{\fulltextwidth}[1]{& \mcp{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% using the \xint package to do some math:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\pagewcomputed #1{\xinttheexpr round(\oneover{#1} - 0.08,2)\relax}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Likert scale question for survey-type "tests":
+% argument 1: multiplier for column count
+% argument 2: columns for the question to span
+% argument 3: question text
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\likertq}[3]{
+
+\def\pagewidthmultiplier{0.19} % assumes five answers; if there are not...
+\xintNewFloatExpr{\oneover}[1]{1/#1}
+
+\stepcounter{saveenum} \stepcounter{answer}
+\def\columncount{#1}
+\def\pwc{\pagewcomputed{\columncount}}
+
+\begin{tabular}{b{\columnonewidth} *{\columncount}{ l p{\pwc\linewidth} } }
+\mft \multicolumn{#2}{p{\linewidth}}{\parbox[t]{6.5in}{#3}}\\[\sep]
+}
+
+
+% checkbox, column break, answer text:
+\newcommand{\loption}[1]{& $\Box$ & #1}
+
+% the usual likert scales for agreement with a given statement:
+\newcommand{\agreefive}{
+\loption{Strongly
+\newline Disagree}
+\loption{Disagree}
+\loption{I have 
+\newline no opinion}
+\loption{Agree}
+\loption{Strongly
+\newline Agree}
+}
+
+\newcommand{\yesno}{
+\loption{Yes}
+\loption{No}
+& & 
+& & 
+& & 
+}
+
+\newcommand{\truefalse}{
+\loption{True}
+\loption{False}
+& & 
+& & 
+& & 
+}
+
+\newcommand{\truefalseq}[1]{
+\likertq{5}{10}{#1}
+\truefalse{}
+\\[\sep]
+\eqq
+}
+
+% bog standard likert scale question:
+\newcommand{\likertqfive}[1]{
+\likertq{5}{10}{#1}
+\agreefive{}
+\\[\sep]
+\eqq
+}
+
+
+
+% the less common seven-stage (and not that awesome) likert scales for agreement with a given statement:
+\newcommand{\agreeseven}{\loption{Strongly Disagree} \loption{Disagree} \loption{Weakly Disagree} \loption{I have no opinion} \loption{Weakly Agree}  \loption{Agree} \loption{Strongly Agree}
+}
+
+
+% macro to put some text on what is roughly the footnote line, 
+% at least for this exam's layout (you should compile more than once):
+\newcommand{\footlineextra}[1]{
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[yshift=4ex,xshift=8ex,anchor=south west] at (current page.south west) 
+        	{\scriptsize \hspace{0ex}{\color{black}#1}};
+    \end{tikzpicture}
+}
+
+
+% Fuzzy stuff, purely for personal preference.
+% --------------------------------------------
+\hfuzz=12pt % Don't bother to report over-full boxes < 12pt
+\vfuzz=12pt % Don't bother to report over-full boxes < 12pt
+\tolerance=500 %
+
+% This macro uses TikZ to put a letter in the upper left corner of the exam, 
+% independent of any margins or other formatting:
+\newcommand{\testversionmarker}[1]{% Marker for test version "A" or "B"
+\begin{tikzpicture}[remember picture,overlay]
+	\node[yshift=-0.35in, xshift=0.35in, anchor=north west]
+	at (current page.north west)
+	{Test Version #1};
+\end{tikzpicture}}
+
+\newcommand{\upperleftcomment}[1]{% arbitrary text
+\begin{tikzpicture}[remember picture,overlay]
+	\node[yshift=-0.35in, xshift=0.35in, anchor=north west]
+	at (current page.north west)
+	{#1};
+\end{tikzpicture}}
+
+
+% Make the test header on the test's title page:
+\newcommand{\testheader}[4]{\begin{center}% \vspace doesn't work at the top of the page:
+{\LARGE \textbf{~\\~\\~\\#1 Exam, #2, #3 }}\\
+
+
+\vspace{#4}
+
+\ifkey
+	~
+\else
+	{\LARGE Read all instructions carefully.}
+	\vspace{#4}
+\fi
+
+\end{center}
+}
+
+% macro to print some instructions to students on the title page.
+% Obviously feel free to change these entries!
+\newcommand{\printinstructions}{ 
+\ifkey
+	\printkey
+\else
+	\begin{center}
+	\begin{minipage}[c]{6.5in}{
+	\Large
+\be
+%\+ \textbf{Do not print your name anywhere on the test.} 
+%\+ \emph{If you print your name on the test, I will take off 10 points.}
+%\+ This test should take no more than 60 minutes.
+%\+ Each question is worth 2 points.
+%\+ If you need more room to write, use the back of the page, and mark the number and letter (if any) of the question you're continuing to work on.
+\+ No hats; no headphones.
+\+ Power down your cell phone and other devices. 
+\+ \textbf{If we see an electronic device, you get a zero.}
+% \+ Put all electronic devices under your desk, but able to be seen.
+%\+ Phones and tablets may also be put on the instructor's desk, or on the whiteboard marker tray.
+\+ Read all the answers for each multiple choice question!
+\+ Do not open the test until instructed to do so.
+\+ If you leave for any reason, you can't come back in.
+\+ This test contains extra credit questions.
+%\+ Fill in your last and first names the bubble sheet. 
+\+ Print your name \& student ID number on the bubble sheet.
+\+ \textbf{Last (family) name goes first on the bubble sheet.}
+\+ Fill in the optical marks corresponding to your name and ID number.
+%\+ You do not need to fill in your ID number.
+\+ Write your name and ID number on the extra credit sheet.
+\+ Turn in the whole exam, with the last page attached.
+\+ If you get a few of the same answers in a row (say, three ``e" or three ``d''), don't freak out. That happens sometimes---the questions and some of the answers are ordered randomly. Trust yourself.
+\+ When you turn in the exam, present your student ID or driver's license to a TA for verification
+%\+ At least one of the answers can be found elsewhere in the test.
+%\+ I enjoyed teaching you. Apply what you've learned outside the classroom.
+\ee
+}
+	\end{minipage}
+	\end{center}
+\fi
+}
+
+% Simple macro for printing "KEY" on the title page (instead of the instructions)
+\newcommand{\printkey}{\begin{center}\begin{LARGE}\textbf{KEY}\end{LARGE}\end{center}}
+
+% Making a slightly custom test section title (includes the opportunity to say how many points each question is worth, plus room for "except as noted" or some other boilerplate)
+\newcommand{\sectiontitle}[3]{\begin{center}
+\begin{Large}
+\textbf{#1}
+\end{Large}
+
+\newif\ifsingle
+\ifnum#2=1 \singletrue \else \singlefalse \fi
+
+\ifsingle
+	\emph{1 point each{}#3.}%,  except as noted}
+\else
+	\emph{#2 points each{}#3.}%,  except as noted}
+\fi
+\end{center}
+}
+
+% macro to write an inline "______" of user-defined length on the test:
+\newcommand{\makeblank}[1]{
+\underline{\makebox[#1][l]{}}
+}
+
+% macro to write a "Name: ______" on the test:
+\newcommand{\addnameline}{\vspace{0.125in}
+
+\begin{tabular}{ll}
+\large Name: & \multicolumn{1}{p{5.5in}}{\hrule} \\
+\end{tabular}
+\vspace{0.125in}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% A little \LaTeX magic to ensure the last page is odd numbered so students can 
+% tear it off without losing any content elsewhere on the test:
+%
+% Note: this bit of code was originally intended to be at the end of a multicols*
+% environment. If you need for it to be at the end of a multicols* environment,
+% you will have to adjust the code manually for now.
+%  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\ifoddleaveblank}{
+
+\ifodd \value{page}
+	\newpage
+
+	\begin{center}
+	~
+	\vfill
+%	\emph{This page (\arabic{page}) intentionally left blank.}
+	\emph{This page intentionally left blank.}
+	\end{center}%
+	\newpage
+\else
+%	Are you sure this is an even-numbered page?
+%	\hbox{}
+%	\newpage
+
+\fi
+}
+
+% DO print the test if this is a key, or DON'T print the text and
+% instead vspace a given amount (to leave room for short answer questions).
+\newcommand{\printifkey}[2]{
+\ifkey 
+	\vspace{0.1in}
+	\noindent\textbf{#2} % \\
+	\bigskip
+
+\else
+	\vspace{#1}
+\fi
+}
+
+% macro to open up the temporary file for storing answer values:
+\newcommand{\opentempfile}[1]{
+
+\ifkey 
+	\newwrite\tempfile
+	\immediate\openout\tempfile=#1
+\fi
+}
+
+% YOU CAN SET the output format for the scantron. It will default to
+% "old4521.txt" both in the script and as I explicitly specify it here.
+
+% macro to close the temporary file for storing answer values and run the python script:
+\newcommand{\closetempfile}[1]{
+\ifkey 
+
+	\immediate\closeout\tempfile
+%	\immediate\write18{/bin/cat #1 | /usr/bin/perl -e 'while(<STDIN>) {chomp; print "$_,"}' > answerlist1.txt }
+	\immediate\write18{/usr/bin/python makesvg.py -o -i "\formdefs"  -f \jobname} % -o means "just print the dots"
+\fi
+}
+
+
+
+% Template for having a graphic in a question:
+\newcommand{\graphicquestion}[1]{
+\stepcounter{saveenum} \stepcounter{answer} 
+\begin{tabular}{b{\graphicquestionwidth}b{\graphiccolumnwidth}}
+	\begin{tabular}{b{\columnonewidth} b{\columntwowidth} p{3.25in} }
+	\textbf{\arabic{saveenum}}. & 
+	\multicolumn{2}{p{\graphicquestionwidth}}{#1} \\[\sep] 
+}
+
+\newcommand{\addquestiongraphic}[2]{
+\eqnoskip
+&
+\begin{minipage}[c]{\graphiccolumnwidth}
+\begin{center}
+\includegraphics[scale=#1, keepaspectratio=true]{#2}\\
+\end{center}
+\end{minipage}
+\\
+}
+
+%<EOF>

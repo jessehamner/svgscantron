@@ -1,0 +1,47 @@
+# Precision Data Products form PDP 4521, not official Scantron.
+# Does say compatible, but isn't the same.
+
+pagewidth=279.5
+pageheight=216.2
+
+alph=["A","B","C","D","E"]
+circdist=4.3
+yincrement=8.5
+radius=1.625
+x1=136.0
+y1=0
+toplefty=[36,123.75]
+rgbcolor="0,95,191"
+hexcolor="#005FBF"
+columnxincrement=29.625
+columnyoffset=[0,0,0,0,0]
+markx=131.25
+spacex=4.3
+interspace = 3.7
+interspacealpha = 5.1
+colcount=5
+rowcount=10
+columnstrutcount=6
+upperlefttextlabelx=12.5
+upperlefttextlabely=6
+nameblockleftx=12.5
+nameblockrightx=114.75
+nameblocktopy=9.5
+nameblockbottomy=138.75
+nameblocklabelbottomy=16
+nameblockpencilbottomy=24.5
+idblockrightx=124.75
+idblocktopy=114
+idblockbottomy=202.25
+titlefontcss="{font-family: "Times New Roman", Times, serif;}"
+
+totalweebly	newtype
+# Scantron NEW type 4521, uses serif font for label text,
+# sans-serif for numbers and letters, with darker blue background
+# Font: Times New Roman -- almost certainly that or Nimbus Roman Medium -- for label text
+# Secondary font: Impact, for "SIDE 1" and "SIDE 2"
+# Secondary font: strongly resembles Myriad Hebrew (bold). Close, but isn't correct
+#   Verdana bold or a generic "sans-serif" bold will be fine for it though
+# blue: propose CMYK [100,50,0,25,100A] or rgb (0,95,191,255A), #005FBF
+# 
+# toplefty=[35,123.75]
